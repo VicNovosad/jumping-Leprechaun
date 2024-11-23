@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GSAP Scroll Animation</title>
+  <style>
+    body {
+      margin: 0;
+      width: 100%;
+      height: 200vh;
+      background: gary;
+    }
+
+    .scroll-out {
+      position: fixed;
+      bottom: 10%;
+      right: -200px;
+      width: 200px;
+      height: fit-content;
+      /* background: red; */
+    }
+
+    .scroll-out img {
+      height: 200px;
+      width: auto;
+    }
+
+    .scroll-out .coin {
+      position: absolute;
+      bottom: 25%;
+      right: 34%;
+      transform: translate(-50%, -50%);
+      width: 30px;
+      height: 30px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="scroll-out">
+    <img src="assets/Leprechaun_2.png" alt="Leprechaun" style="width: 100%; height: auto;">
+    <img src="assets/coin.png" alt="Coin" class="coin">
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.6.1/ScrollTrigger.min.js"></script>
+
+  <script>
+    // Slide-out animation
+    gsap.to('.scroll-out', {
+      scrollTrigger: {
+        trigger: document.body,
+        start: '50% center', // Start sliding at 50% of the body
+        end: '60% center',   // Complete slide-out at 60% of the body
+        scrub: true,         // Smooth scrubbing effect
+        markers: true,       // Show labels and markers
+      },
+      // x: -200,               // Slide out to the left
+      x: () => -document.querySelector('.scroll-out').offsetWidth,
+    });
+
+    // 3D-like rotation animation for the coin
+    const coinRotation =  gsap.to('.coin', {
+      scaleX: 0,           // Flatten width
+      repeat: -1,          // Infinite loop
+      yoyo: true,          // Reverse back to full width
+      duration: 0.5,       // Speed of rotation
+      ease: "power1.inOut", // Smooth easing
+      paused: true,  
+    });
+
+    // Flatten the .scroll-out container on hover
+    const flattenContainer = gsap.to('.scroll-out', {
+      scaleY: 0.99,        // Flatten on the y-axis slightly
+      duration: 0.5,       // Speed of the flatten effect
+      ease: "power1.inOut",
+      paused: true,        // Initially paused
+      yoyo: true,          // Reverse to the original state
+      repeat: -1,           // Shrinks and grows back once
+    });
+
+    // Trigger animation on hover
+    document.querySelector('.scroll-out').addEventListener('mouseenter', () => {
+      coinRotation.play();
+      flattenContainer.play();
+    });
+
+    document.querySelector('.scroll-out').addEventListener('mouseleave', () => {
+      coinRotation.pause();
+      flattenContainer.reverse();
+    });
+  </script>
+</body>
+
+</html>
